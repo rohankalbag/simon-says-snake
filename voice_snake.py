@@ -31,9 +31,9 @@ game_window = pygame.display.set_mode((frame_size_x, frame_size_y))
 fps_controller = pygame.time.Clock()
 
 def check_for_events():
-    global direction
+    print("Speak Now: ")
     fs = 44100
-    duration = 3
+    duration = 10
     myrecording = sd.rec(duration * fs, samplerate=fs, channels=2,dtype='float64')
     #print("Recording Audio")
     sd.wait()
@@ -64,17 +64,16 @@ def check_for_events():
 
 def refresh_snake():
     global directions, change_to, direction
-    if(len(directions) > 0):
-        x = directions.pop(0)
-        if x == 'UP':
-            change_to = 'UP'
-        if x == 'DOWN':
-            change_to = 'DOWN'
-        if x == 'LEFT':
-            change_to = 'LEFT'
-        if x == 'RIGHT':
-            change_to = 'RIGHT'
-  
+    x = directions.pop(0)
+    if x == 'UP':
+        change_to = 'UP'
+    if x == 'DOWN':
+        change_to = 'DOWN'
+    if x == 'LEFT':
+        change_to = 'LEFT'
+    if x == 'RIGHT':
+        change_to = 'RIGHT'
+
     if change_to == 'UP' and direction != 'DOWN':
         direction = 'UP'
     if change_to == 'DOWN' and direction != 'UP':
@@ -179,5 +178,6 @@ def game_over():
 
 while True:
     check_for_events()
-    refresh_snake()
-    update_snake()
+    while(len(directions)>0):
+        refresh_snake()
+        update_snake()

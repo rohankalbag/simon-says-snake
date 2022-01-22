@@ -6,7 +6,7 @@ directions = []
 
 def check_for_events():
     fs = 44100
-    duration = 3
+    duration = 2
     myrecording = sd.rec(duration * fs, samplerate=fs, channels=2,dtype='float64')
     #print("Recording Audio")
     sd.wait()
