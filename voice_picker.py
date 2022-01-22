@@ -1,5 +1,3 @@
-
-import pygame, time, random
 import sounddevice as sd
 from deepgram import Deepgram
 import asyncio, json
