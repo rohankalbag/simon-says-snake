@@ -2,7 +2,7 @@
 
 *This project uses Deepgram speech to text API to create a controller for software/mechanical systems (here the control for the snake in the [classic snake game](https://theprint.in/features/nokias-snake-the-mobile-game-that-became-an-entire-generations-obsession/462873/)). Applications include Voice controlled wheelchairs, emulators for games with audio keys, etc.*
 
-## This Project was contributed to the [Cambridge Hackathon](https://hackcambridge.com) held on 22-23 January 2022
+## This Project was contributed to the [Hack Cambridge Atlas Hackathon](https://hackcambridge.com) held on 22-23 January 2022
 
 [Link to Devpost Submission](https://devpost.com/software/audio-position-controller)
 
