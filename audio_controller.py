@@ -40,7 +40,7 @@ def check_for_events():
     print("Don't Speak Now:")
     sf.write("dummy.wav", myrecording, fs)
     #Enter your API KEY
-    DEEPGRAM_API_KEY = '3616bc1d9c2d4a9306a400801decefbb9d5e984b'
+    DEEPGRAM_API_KEY = 'ENTER YOUR API KEY HERE'
     PATH_TO_FILE = os.getcwd() + '\dummy.wav'
 
     async def main():
