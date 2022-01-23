@@ -3,6 +3,7 @@ import sounddevice as sd
 from deepgram import Deepgram
 import asyncio, json
 import soundfile as sf
+import os
 
 white_color = (255,255,255)
 green_color = (0,255,0)
@@ -15,7 +16,7 @@ frame_size_y = 480
 
 snake_pos = [360, 240]
 snake_body = [[360, 240],[360-10, 240],[360-(2*10), 240]]
-snake_speed = 3
+snake_speed = 4
 direction = 'RIGHT'
 change_to = direction
 directions = []
@@ -31,18 +32,19 @@ game_window = pygame.display.set_mode((frame_size_x, frame_size_y))
 fps_controller = pygame.time.Clock()
 
 def check_for_events():
-    print("Speak Now: ")
+    print("Speak Now:")
     fs = 44100
-    duration = 10
+    duration = 4
     myrecording = sd.rec(duration * fs, samplerate=fs, channels=2,dtype='float64')
     #print("Recording Audio")
     sd.wait()
+    print("Don't Speak Now:")
     sf.write("dummy.wav", myrecording, fs)
 
-    DEEPGRAM_API_KEY = '3616bc1d9c2d4a9306a400801decefbb9d5e984b'
+    DEEPGRAM_API_KEY = 'ENTER YOUR DEEPGRAM API KEY'
 
     # Name and extension of the file you downloaded (e.g. sample.wav)
-    PATH_TO_FILE = 'E:\Academics\IIT Bombay\Repositories\Cambridge-Hackathon\dummy.wav'
+    PATH_TO_FILE = os.getcwd() + '\dummy.wav'
 
     async def main():
         global directions
@@ -86,9 +88,6 @@ def refresh_snake():
     print(directions)
 
 def update_snake():
-    """
-     This should contain the code for snake to move, grow, detect walls etc.
-     """
     global snake_body,snake_pos,food_pos,score,food_spawn
 
     if direction == 'UP':
@@ -122,19 +121,12 @@ def update_snake():
 
 def create_food():
     global food_spawn,food_pos
-    """ 
-    This function should set coordinates of food if not there on the screen. You can use randrange() to generate
-    the location of the food.
-    """
     if(not food_spawn):
         food_pos = [random.randrange(1, int(frame_size_x/10)) * 10,random.randrange(1, int(frame_size_y/10)) * 10]
     food_spawn = True
       
 
 def show_score(pos, color, font, size):
-    """
-    It takes in the above arguements and shows the score at the given pos according to the color, font and size.
-    """
     score_font = pygame.font.SysFont('times new roman', size)
     score_surface = score_font.render('Score : ' + str(score), True, color)
     score_rect = score_surface.get_rect()
@@ -142,9 +134,6 @@ def show_score(pos, color, font, size):
     game_window.blit(score_surface, score_rect)
 
 def update_screen():
-    """
-    Draw the snake, food, background, score on the screen
-    """
     game_window.fill(black_color)
     show_score(1, white_color, 'times new roman', 20)
     for pos in snake_body:
@@ -155,10 +144,6 @@ def update_screen():
     fps_controller.tick(snake_speed)
 
 def game_over():
-    """ 
-    Write the function to call in the end. 
-    It should write game over on the screen, show your score, wait for 3 seconds and then exit
-    """
     game_window.fill(black_color)
     my_font = pygame.font.SysFont('times new roman', 100)
     smaller_font = pygame.font.SysFont('times new roman', 20)
@@ -181,3 +166,5 @@ while True:
     while(len(directions)>0):
         refresh_snake()
         update_snake()
+    else:
+        directions += [direction]
