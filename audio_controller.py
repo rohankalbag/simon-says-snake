@@ -36,14 +36,11 @@ def check_for_events():
     fs = 44100
     duration = 4
     myrecording = sd.rec(duration * fs, samplerate=fs, channels=2,dtype='float64')
-    #print("Recording Audio")
     sd.wait()
     print("Don't Speak Now:")
     sf.write("dummy.wav", myrecording, fs)
-
+    #Enter your API KEY
     DEEPGRAM_API_KEY = 'ENTER YOUR DEEPGRAM API KEY'
-
-    # Name and extension of the file you downloaded (e.g. sample.wav)
     PATH_TO_FILE = os.getcwd() + '\dummy.wav'
 
     async def main():
