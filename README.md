@@ -30,6 +30,10 @@ python audio_controller.py
 - Commands you can speak out : ```UP, DOWN, LEFT, RIGHT``` to make the snake go UP, DOWN, LEFT and RIGHT respectively.
 - The snake will now follow your commands. The game works like the classic snake game, eat the white pixels(food) and do not crash the wall or yourself. 
 
+## Video Demo
+
+https://user-images.githubusercontent.com/46604893/150671200-3edc163d-f74f-46ef-be5a-eec4105568a2.mp4
+
 ## Improvements and Future Work
 (We couldn't implement these given the finite time constraint of the hackathon, but we'd love to)
 - We can build an emulator where more games with common keys can run via audio instructions.
