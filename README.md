@@ -1,4 +1,6 @@
-# Audio Position Controller
+# Simon Says Snake
+
+## Self Project 
 
 *This project uses Deepgram speech to text API to create a controller for software/mechanical systems (here the control for the snake in the [classic snake game](https://theprint.in/features/nokias-snake-the-mobile-game-that-became-an-entire-generations-obsession/462873/)). Applications include Voice controlled wheelchairs, emulators for games with audio keys, etc.*
 
