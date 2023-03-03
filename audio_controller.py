@@ -1,15 +1,16 @@
 import pygame, time, random
-import sounddevice as sd
-from deepgram import Deepgram
 import asyncio, json
-import soundfile as sf
-import os
+import threading
+from voice_recognition import LISTENER
 
+thread_running = True
+thread_lock = threading.Lock()
+
+# Parameters
 white_color = (255,255,255)
 green_color = (0,255,0)
 black_color = (0,0,0)
 red_color = (255,0,0)
-
 
 frame_size_x = 720
 frame_size_y = 480
@@ -26,44 +27,51 @@ food_spawn = False
 
 score = 0
 
+
+# Writing thread
+def writer_thread(x):
+    with thread_lock:
+        directions.append(x)
+
+
+# Reading thread
+def reader_thread():
+    with thread_lock:
+        if len(directions) > 0:
+            return directions.pop(0)
+        else:
+            return None
+        
+
 pygame.init()
-pygame.display.set_caption('Snake Eater')
+pygame.display.set_caption('Snake')
 game_window = pygame.display.set_mode((frame_size_x, frame_size_y))
 fps_controller = pygame.time.Clock()
 
-def check_for_events():
-    print("Speak Now:")
-    fs = 44100
-    duration = 4
-    myrecording = sd.rec(duration * fs, samplerate=fs, channels=2,dtype='float64')
-    sd.wait()
-    print("Don't Speak Now:")
-    sf.write("dummy.wav", myrecording, fs)
-    #Enter your API KEY
-    DEEPGRAM_API_KEY = 'ENTER YOUR API KEY HERE'
-    PATH_TO_FILE = os.getcwd() + '\dummy.wav'
+def check_if_words_spoken():
+    global thread_running
+    while thread_running:
+        vr = LISTENER()
+        transcript = vr.listen().upper().split()
+        print(transcript)
+        for inst in transcript:
+            if inst in ["LEFT", "RIGHT", "UP", "DOWN"]:
+                writer_thread(inst)
 
-    async def main():
-        global directions
-        # Initialize the Deepgram SDK
-        dg_client = Deepgram(DEEPGRAM_API_KEY)
-        # Open the audio file
-        with open(PATH_TO_FILE, 'rb') as audio:
-            # Replace mimetype as appropriate
-            source = {'buffer': audio, 'mimetype': 'audio/wav'}
-            response = await dg_client.transcription.prerecorded(source, {'punctuate': False})
-            x = json.loads(json.dumps(response, indent=4))
-            x = str(x["results"]["channels"][0]["alternatives"][0]["transcript"]).upper().split()
-            for i in x:
-                if(i in ['LEFT','RIGHT','UP','DOWN']):
-                    directions.append(i)
 
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    asyncio.run(main())
+def snake_game():
+    global thread_running
+    refresh_snake("RIGHT")
+    update_snake()
+    while thread_running:
+        x = reader_thread()
+        if x:
+            refresh_snake(x)
+            update_snake()
 
-def refresh_snake():
-    global directions, change_to, direction
-    x = directions.pop(0)
+
+def refresh_snake(x):
+    global directions, change_to, direction 
     if x == 'UP':
         change_to = 'UP'
     if x == 'DOWN':
@@ -81,8 +89,6 @@ def refresh_snake():
         direction = 'LEFT'
     if change_to == 'RIGHT' and direction != 'LEFT':
         direction = 'RIGHT'
-    
-    #print(directions)
 
 def update_snake():
     global snake_body,snake_pos,food_pos,score,food_spawn
@@ -157,11 +163,20 @@ def game_over():
     pygame.quit()
     quit()
 
+if __name__ == "__main__":
+    thread_1 = threading.Thread(target=check_if_words_spoken)
+    thread_2 = threading.Thread(target=snake_game)
 
-while True:
-    check_for_events()
-    while(len(directions)>0):
-        refresh_snake()
-        update_snake()
-    else:
-        directions += [direction]
+    # Start the threads
+    thread_1.start()
+    thread_2.start()
+
+    try:
+        while True:
+            pass
+    except KeyboardInterrupt:
+        # Terminate the threads when the user interrupts the program
+        print("\nProgram interrupted. Terminating threads...")
+        thread_running = False
+        thread_1.join()
+        thread_2.join()
